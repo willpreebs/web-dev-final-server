@@ -1,11 +1,12 @@
 import "dotenv/config";
 
-import express from 'express';
+import express, { Router } from 'express';
 import cors from 'cors';
 import mongoose from "mongoose";
 import UserRoutes from "./users/routes.js";
 import SearchRoutes from "./Search/routes.js";
 import LocationRoutes from "./locations/routes.js";
+import serverless from "serverless-http";
 
 const LOCAL = false;
 
@@ -21,11 +22,18 @@ const REMOTE_DB = `mongodb+srv://${MONGO_ATLAS_USERNAME}:${MONGO_ATLAS_PASS}@clu
 mongoose.connect(LOCAL ? LOCAL_DB : REMOTE_DB);
 
 const app = express();
+const router = Router();
+
 app.use(express.json());
 app.use(cors());
-LocationRoutes(app);
-SearchRoutes(app);
-UserRoutes(app);
+
+LocationRoutes(router);
+SearchRoutes(router);
+UserRoutes(router);
+
+app.use("/", router);
 
 const PORT = process.env.SERVER_PORT || 4000;
 app.listen(PORT);
+
+export const handler = serverless(app);
