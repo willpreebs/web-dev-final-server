@@ -3,9 +3,9 @@ import "dotenv/config";
 import express, { Router } from 'express';
 import cors from 'cors';
 import mongoose from "mongoose";
-import UserRoutes from "./users/routes.js";
-import SearchRoutes from "./Search/routes.js";
-import LocationRoutes from "./locations/routes.js";
+import UserRoutes from "../../users/routes.js";
+import SearchRoutes from "../../Search/routes.js";
+import LocationRoutes from "../../locations/routes.js";
 import serverless from "serverless-http";
 
 const LOCAL = false;
