@@ -23,8 +23,7 @@ async function RequestGoogleMaps(searchTerm) {
         // locationRestriction: locationRestriction,
         maxResultCount: maxResultCount,
     }
-    // const GOOGLE_API_KEY = process.env.GOOGLE_MAPS_API;
-    const GOOGLE_API_KEY = "AIzaSyCBpGgfYJ0E-GXUlcEQxEZId2dysQ52dqM";
+    const GOOGLE_API_KEY = process.env.GOOGLE_MAPS_API;
     const URL = "https://places.googleapis.com/v1/places:searchText";
     const headers = {
         'Content-Type': 'application/json',
