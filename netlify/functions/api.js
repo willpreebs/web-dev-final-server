@@ -22,16 +22,21 @@ const REMOTE_DB = `mongodb+srv://${MONGO_ATLAS_USERNAME}:${MONGO_ATLAS_PASS}@clu
 mongoose.connect(LOCAL ? LOCAL_DB : REMOTE_DB);
 
 const app = express();
-const router = Router();
+
+const locationRouter = Router();
+const searchRouter = Router();
+const userRouter = Router();
 
 app.use(express.json());
 app.use(cors());
 
-LocationRoutes(router);
-SearchRoutes(router);
-UserRoutes(router);
+LocationRoutes(locationRouter);
+SearchRoutes(searchRouter);
+UserRoutes(userRouter);
 
-app.use("/", router);
+app.use("/locations", locationRouter);
+app.use("/search", searchRouter);
+app.use("/users", userRouter);
 
 const PORT = process.env.SERVER_PORT || 4000;
 app.listen(PORT);

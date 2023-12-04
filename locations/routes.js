@@ -25,10 +25,11 @@ function LocationRoutes(app) {
     const ret = await dao.updateLocation(locationId, location);
   };
 
-  app.post("/locations", createLocation);
+  app.post("/", createLocation);
+  app.get("/", findAllLocations);
   app.get("/locations", findAllLocations);
-  app.get("/locations/:locationId", findLocationById);
-  app.put("/locations/:locationId", updateLocation);
-  app.delete("/locations/:locationId", deleteLocation);
+  app.get("/:locationId", findLocationById);
+  app.put("/:locationId", updateLocation);
+  app.delete("/:locationId", deleteLocation);
 }
 export default LocationRoutes;
