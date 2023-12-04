@@ -2,10 +2,13 @@ import RequestGoogleMaps from "./requestAPI.js";
 
 function SearchRoutes(app) {
 
-    app.get("/search/:term", (req, res) => {
+    app.get("/:term", async (req, res) => {
         const searchTerm = req.params.term;
-        const searchResult = RequestGoogleMaps(searchTerm);
+        const searchResult = await RequestGoogleMaps(searchTerm);
+        console.log(searchResult);
         res.send(searchResult);
     }); 
+
 }
 export default SearchRoutes;
+
