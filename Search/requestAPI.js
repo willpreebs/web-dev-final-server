@@ -4,25 +4,21 @@ import { response } from "express";
 
 
 
-async function RequestGoogleMaps(searchTerm) {
+async function RequestGoogleMaps(textQuery) {
 
-    // const locationRestriction = {
-    //     "circle": {
-    //         "center": {
-    //             "latitude": 42.338,
-    //             "longitude": -71.088
-    //         },
-    //         "radius": 3000
-    //     }
-    // }
+    const locationBias = {
+        "circle": {
+            "center": {
+                "latitude": 42.338,
+                "longitude": -71.088
+            },
+            "radius": 3000
+        }
+    }
 
     const maxResultCount = 5;
     
-    const request = {
-        textQuery: searchTerm,
-        // locationRestriction: locationRestriction,
-        maxResultCount: maxResultCount,
-    }
+    const request = { textQuery, locationBias, maxResultCount}
     const GOOGLE_API_KEY = process.env.GOOGLE_MAPS_API;
     const URL = "https://places.googleapis.com/v1/places:searchText";
     const headers = {
