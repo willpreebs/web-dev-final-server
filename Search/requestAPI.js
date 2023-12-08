@@ -1,10 +1,10 @@
 
 import axios from "axios";
 import { response } from "express";
+import * as dao from "../locations/dao.js";
 
 
-
-async function RequestGoogleMaps(textQuery) {
+export async function getSearchResults(textQuery) {
 
     const locationBias = {
         "circle": {
@@ -39,5 +39,20 @@ async function RequestGoogleMaps(textQuery) {
     })
 
     return responseData;
-} 
-export default RequestGoogleMaps;
+}
+
+export async function findLocationsFromSearchResults(results) {
+  const places = results.places;
+
+  let locations = [];
+
+  for (const place of places) {
+    const id = place.id;
+    const locationsAtPlace = await dao.findLocationsByPlaceId(id);
+    if (locationsAtPlace.length) {
+      locations.push(locationsAtPlace);
+    }
+  }
+
+  return locations;
+}

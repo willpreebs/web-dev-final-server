@@ -1,10 +1,12 @@
-import * as dao from "./dao.js";
+import * as userDao from "./dao.js";
+import * as locationDao from "../locations/dao.js";
+
 let currentUser = null;
 function UserRoutes(app) {
 
   const createUser = async (req, res) => {
     try {
-      const response = await dao.createUser(req.body);
+      const response = await userDao.createUser(req.body);
       res.json(response);
     } catch (err) {
       console.log("Encountered error with createUser");
@@ -12,19 +14,28 @@ function UserRoutes(app) {
     }
   };
 
-  const deleteUser = async (req, res) => { };
-
   const findAllUsers = async (req, res) => {
-    const users = await dao.findAllUsers();
+    const users = await userDao.findAllUsers();
     res.json(users);
   };
 
-  const findUserById = async (req, res) => { };
-  const updateUser = async (req, res) => { };
+  const deleteUser = async (req, res) => {
+    await userDao.deleteUser(req.params.userId);
+  };
+
+  const findUserById = async (req, res) => {
+    await userDao.findUserById(req.params.userId);
+  };
+
+
+  const updateUser = async (req, res) => {
+    const userId = req.params.userId;
+    userDao.updateUser(userId, req.body);
+  };
 
   const signup = async (req, res) => {
     console.log("signup");
-    const user = await dao.findUserByUsername(
+    const user = await userDao.findUserByUsername(
       req.body.username);
     if (user) {
       console.log("user found");
@@ -32,7 +43,7 @@ function UserRoutes(app) {
         { message: "Username already taken"});
       return;
     }
-    currentUser = await dao.createUser(req.body);
+    currentUser = await userDao.createUser(req.body);
     // TODO: multiple ?
     // req.session['currentUser'] = currentUser;
     res.json(currentUser);
@@ -42,8 +53,10 @@ function UserRoutes(app) {
     console.log("signin");
     console.log(req.body);
     const {username, password} = req.body;
-    const currentUser = await dao.findUserByCredentials(username, password);
+    const currentUser = await userDao.findUserByCredentials(username, password);
     // req.session['currentUser'] = currentUser;
+
+    console.log(currentUser);
     res.json(currentUser);
   };
 
@@ -54,12 +67,17 @@ function UserRoutes(app) {
     res.json(req.session['currentUser']);
   };
 
+  const getUserReviews = async (req, res) => {
+    
+  }
+
   app.post("/", createUser);
   app.get("/", findAllUsers);
   app.post("/signin", signin);
   app.get("/:userId", findUserById);
   app.put("/:userId", updateUser);
   app.delete("/:userId", deleteUser);
+  app.get("/:userId/reviews", getUserReviews);
   app.post("/signup", signup);
   app.post("/signout", signout);
   app.post("/account", account);

@@ -12,10 +12,9 @@ const LOCAL = false;
 
 const LOCAL_DB = "mongodb://127.0.0.1:27017/Fountains";
 
-const MONGO_ATLAS_USERNAME = process.env.MONGO_ATLAS_USERNAME || "fountainsAdmin";
-const MONGO_ATLAS_PASS = process.env.MONGO_ATLAS_PASS || "67HywSBufIfOhfWm";
-
-const DB_NAME = process.env.MONGO_ATLAS_DB_NAME || "FountainGuru";
+const MONGO_ATLAS_USERNAME = process.env.MONGO_ATLAS_USERNAME;
+const MONGO_ATLAS_PASS = process.env.MONGO_ATLAS_PASS;
+const DB_NAME = process.env.MONGO_ATLAS_DB_NAME;
 
 const REMOTE_DB = `mongodb+srv://${MONGO_ATLAS_USERNAME}:${MONGO_ATLAS_PASS}@cluster0.3pkvr30.mongodb.net/${DB_NAME}?retryWrites=true&w=majority`
 
