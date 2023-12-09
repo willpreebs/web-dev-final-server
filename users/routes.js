@@ -1,7 +1,6 @@
 import * as userDao from "./dao.js";
 import * as locationDao from "../locations/dao.js";
 
-let currentUser = null;
 function UserRoutes(app) {
 
   const createUser = async (req, res) => {
@@ -30,7 +29,10 @@ function UserRoutes(app) {
 
   const updateUser = async (req, res) => {
     const userId = req.params.userId;
-    userDao.updateUser(userId, req.body);
+    const status = await userDao.updateUser(userId, req.body);
+    const currentUser = await userDao.findUserById(userId);
+    req.session['currentUser'] = currentUser;
+    res.json(status);
   };
 
   const signup = async (req, res) => {
@@ -43,9 +45,8 @@ function UserRoutes(app) {
         { message: "Username already taken"});
       return;
     }
-    currentUser = await userDao.createUser(req.body);
-    // TODO: multiple ?
-    // req.session['currentUser'] = currentUser;
+    const currentUser = await userDao.createUser(req.body);
+    req.session['currentUser'] = currentUser;
     res.json(currentUser);
   };
   
@@ -54,13 +55,13 @@ function UserRoutes(app) {
     console.log(req.body);
     const {username, password} = req.body;
     const currentUser = await userDao.findUserByCredentials(username, password);
-    // req.session['currentUser'] = currentUser;
-
+    req.session['currentUser'] = currentUser;
     console.log(currentUser);
     res.json(currentUser);
   };
 
   const signout = (req, res) => {
+    console.log("signing out");
     req.session.destroy();
   };
   const account = async (req, res) => {
@@ -68,7 +69,8 @@ function UserRoutes(app) {
   };
 
   const getUserReviews = async (req, res) => {
-    
+    const userId = req.params.userId;
+    const reviews = locationDao.getReviewsByUserId(userId);
   }
 
   app.post("/", createUser);

@@ -19,6 +19,10 @@ export const findDetailsById = (detailsId) => detailsModel.findById(detailsId);
 
 export const addReviewToDetails = (detailsId, review) => detailsModel.updateOne({ _id: detailsId }, { $push: {reviews: review}});
 
+export const updateDetails = (detailsId, details) => detailsModel.updateOne({ _id: detailsId }, { $set: details })
+
 // reviews:
 
 export const getReviewsByUserId = (userId) => reviewModel.find({user: userId});
+
+export const getReviewsByLocation = (locationId) => reviewModel.find({location: locationId});

@@ -12,7 +12,6 @@ function LocationRoutes(app) {
   };
   const findAllLocations = async (req, res) => {
     const locations = await dao.findAllLocations();
-    console.log(locations);
     res.send(locations);
   };
   const findLocationById = async (req, res) => {
@@ -30,7 +29,7 @@ function LocationRoutes(app) {
     res.send(await dao.findLocationsByPlaceId(placeId));
   }
 
-  const getlocationDetails = async (req, res) => {
+  const getLocationDetails = async (req, res) => {
     console.log("Getting location details");
     const locationId = req.params.locationId;
     const location = await dao.findLocationById(locationId);
@@ -38,21 +37,28 @@ function LocationRoutes(app) {
     if (detailsId) {
       const details = await dao.findDetailsById(detailsId);
       res.send(details);
-    } else {
+    } 
+    else {
       res.status(404).json({message: "No details for this location"});
     }
+  }
+
+  const getLocationReviews = async (req, res) => {
+    const locationId = req.params.locationId;
+    const reviews = await dao.getReviewsByLocation(locationId);
+    res.send(reviews);
   }
 
   const addReviewToLocation = async (req, res) => {
     const locationId = req.params.locationId;
     const location = await dao.findLocationById(locationId);
     if (location.details) {
-      console.log("location details: " + location.details);
+      // console.log("location details: " + location.details);
       const details = await dao.addReviewToDetails(location.details, {...req.body, location: locationId});
       res.send(details);
     }
     else if (location) {
-      console.log(location);
+      // console.log(location);
       const details = await dao.addNewDetails(req.params.locationId, {...req.body, location: locationId});
       res.send(details);
     }
@@ -61,13 +67,37 @@ function LocationRoutes(app) {
     }
   }
 
+  const updateLocationDetails = async (req, res) => {
+    console.log("updating location details");
+    const locationId = req.params.locationId;
+    const location = await dao.findLocationById(locationId);
+    if (location.details) {
+      // console.log("location details: " + location.details);
+      const details = await dao.updateDetails(location.details);
+      res.send(details);
+    }
+    else {
+      res.status(404).json({message: "details not found"});
+    }
+  }
+
+  const createLocationDetails = async (req, res) => {
+    await dao.addNewDetails
+  }
+
   app.post("/", createLocation);
   app.get("/", findAllLocations);
-  app.get("/:locationId/details", getlocationDetails);
-  app.post("/:locationId/details", addReviewToLocation);
+
+  app.get("/:locationId/details", getLocationDetails);
+  app.put("/:locationId/details", updateLocationDetails);
+  app.post("/:locationId/details", createLocationDetails);
+  app.post("/:locationId/reviews", addReviewToLocation);
+  app.get("/:locationId/reviews", getLocationReviews);
+
   app.get("/:locationId", findLocationById);
   app.put("/:locationId", updateLocation);
   app.delete("/:locationId", deleteLocation);
+
   app.get("/place/:placeId", findLocationsByPlaceId);
 }
 export default LocationRoutes;

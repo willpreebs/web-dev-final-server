@@ -4,7 +4,7 @@ import * as userDao from "../../users/dao.js";
 import { reviewModel } from "./model.js";
 
 const reviewSchema = new Schema({
-    _id: Schema.ObjectId,
+    _id: Schema.Types.ObjectId,
     user: {
         type: Schema.Types.ObjectId,
         ref: 'users',
@@ -20,12 +20,14 @@ const reviewSchema = new Schema({
 {"collection": "reviews"});
 
 const detailsSchema = new Schema({
-    _id: Schema.ObjectId,
+    _id: Schema.Types.ObjectId,
     location: {
         type: Schema.Types.ObjectId,
         ref: 'locations',
         required: true,
     },
+    lastUpdated: Schema.Types.Date,
+    bottlesSaved: Number,
     reviews: [{
         type: Schema.Types.ObjectId,
         ref: 'reviews',
@@ -34,18 +36,24 @@ const detailsSchema = new Schema({
 
 detailsSchema.pre('updateOne', async function() {
     const update = this.getUpdate();
-    const review = update.$push && update.$push.reviews;
 
-    const newReviewDocument = new reviewModel({
-        _id: new mongoose.Types.ObjectId(),
-        ...review
-    });
+    if (update.$push) {
+        const review = update.$push.reviews;
 
-    await newReviewDocument.save();
+        const newReviewDocument = new reviewModel({
+            _id: new mongoose.Types.ObjectId(),
+            ...review
+        });
 
-    await userDao.addReviewToUser(review.user, newReviewDocument._id);
+        await newReviewDocument.save();
 
-    update.$push.reviews = newReviewDocument._id;
+        await userDao.addReviewToUser(review.user, newReviewDocument._id);
+
+        update.$push.reviews = newReviewDocument._id;
+    } else if (update.$set) {
+        const newInfo = update.$set;
+        console.log(newInfo);
+    }
 })
 
 export { reviewSchema, detailsSchema }

@@ -19,7 +19,7 @@ locationSchema.pre('updateOne', async function () {
     const review = update.$set && update.$set.details;
 
     if (review && !mongoose.Types.ObjectId.isValid(review)) {
-        console.log("review: " + review);
+        // console.log("review: " + review);
 
         const newReviewDocument = new reviewModel({
             ...review
@@ -27,7 +27,6 @@ locationSchema.pre('updateOne', async function () {
 
         await newReviewDocument.save();
         const reviewId = newReviewDocument._id;
-        console.log("ReviewId: " + reviewId);
         try {
         const newDetailsDocument = new detailsModel({
             // _id: new mongoose.Types.ObjectId(),
