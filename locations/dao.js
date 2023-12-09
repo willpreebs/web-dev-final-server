@@ -21,7 +21,7 @@ export const createDetails = (details) => {
   return detailsModel.create({ ...details, lastUpdated: date });
 }
 
-export const createDetailsFromFirstReview = (review) => detailsModel.create({ location: review.location, reviews: [review._id] });
+export const createDetailsFromFirstReview = (locationId, reviewId) => detailsModel.create({ location: locationId, reviews: [reviewId] });
 
 export const findDetailsById = (detailsId) => detailsModel.findById(detailsId);
 
@@ -50,3 +50,5 @@ export const getReviewById = (reviewId) => reviewModel.findById(reviewId);
 export const updateReview = (reviewId, review) => reviewModel.updateOne({_id: reviewId}, { $set: review });
 
 export const deleteReview = (reviewId) => reviewModel.deleteOne({_id: reviewId});
+
+export const createReview = (locationId, review) => reviewModel.create({...review, location: locationId})

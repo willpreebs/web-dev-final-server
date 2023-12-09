@@ -60,10 +60,14 @@ function LocationRoutes(app) {
       res.send(details);
     }
     else if (location) {
-      // console.log(location);
-      const details = await dao.createDetailsFromFirstReview(review);
-      const location = await dao.updateLocation(locationId, {...location, details: details._id});
-      res.send(details);
+      console.log("hit");
+
+      const newReview = await dao.createReview(locationId, review);
+      const details = await dao.createDetailsFromFirstReview(locationId, newReview._id);
+      console.log(details);
+      console.log("hit");
+      const newLocation = await dao.updateLocation(locationId, {details: details._id});
+      res.send(newLocation);
     }
     else {
       // console.log("Location doesn't exist");
