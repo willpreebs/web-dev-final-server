@@ -48,3 +48,5 @@ export const getReviewsByLocation = (locationId) => reviewModel.find({ location:
 export const getReviewById = (reviewId) => reviewModel.findById(reviewId);
 
 export const updateReview = (reviewId, review) => reviewModel.updateOne({_id: reviewId}, { $set: review });
+
+export const deleteReview = (reviewId) => reviewModel.deleteOne({_id: reviewId});

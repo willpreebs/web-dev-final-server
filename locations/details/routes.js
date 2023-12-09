@@ -16,8 +16,13 @@ function ReviewRoutes(app) {
     res.send(await dao.updateReview(reviewId, req.body));
   }
 
+  const deleteReview = async (req, res) => {
+    res.send(await dao.deleteReview(req.params.reviewId));
+  }
+
   app.get("/", findAllReviews);
   app.get("/:reviewId", getReview);
   app.put("/:reviewId", updateReview);
+  app.delete("/:reviewId", deleteReview);
 }
 export default ReviewRoutes;
