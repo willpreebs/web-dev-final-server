@@ -55,22 +55,25 @@ function UserRoutes(app) {
     console.log(req.body);
     const {username, password} = req.body;
     const currentUser = await userDao.findUserByCredentials(username, password);
-    req.session['currentUser'] = currentUser;
-    console.log(currentUser);
+    // req.session['currentUser'] = currentUser;
+    // console.log(currentUser);
     res.json(currentUser);
   };
 
-  const signout = (req, res) => {
-    console.log("signing out");
-    req.session.destroy();
-  };
-  const account = async (req, res) => {
-    res.json(req.session['currentUser']);
-  };
+  // const signout = (req, res) => {
+  //   console.log("signing out");
+  //   req.session.destroy();
+  // };
+  // const account = async (req, res) => {
+  //   res.json(req.session['currentUser']);
+  // };
 
   const getUserReviews = async (req, res) => {
+    console.log('getUserReviews');
     const userId = req.params.userId;
-    const reviews = locationDao.getReviewsByUserId(userId);
+    const reviews = await locationDao.getReviewsByUserId(userId);
+    console.log(reviews);
+    res.send(reviews);
   }
 
   app.post("/", createUser);
@@ -81,7 +84,6 @@ function UserRoutes(app) {
   app.delete("/:userId", deleteUser);
   app.get("/:userId/reviews", getUserReviews);
   app.post("/signup", signup);
-  app.post("/signout", signout);
-  app.post("/account", account);
+  // app.post("/account", account);
 }
 export default UserRoutes;

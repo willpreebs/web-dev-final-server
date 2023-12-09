@@ -13,7 +13,8 @@ const reviewSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'locations',
         required: true
-    }
+    },
+    reviewText: String,
 },
 {"collection": "reviews"});
 
