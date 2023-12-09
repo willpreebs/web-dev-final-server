@@ -1,5 +1,5 @@
 
-import mongoose, { Schema, Types } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import * as userDao from "../../users/dao.js";
 import { reviewModel } from "./model.js";
 

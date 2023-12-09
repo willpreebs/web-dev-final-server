@@ -20,9 +20,10 @@ locationSchema.pre('updateOne', async function () {
 
     if (review && !mongoose.Types.ObjectId.isValid(review)) {
         // console.log("review: " + review);
-        
+
         try {
         const newReviewDocument = new reviewModel({
+            _id: new mongoose.Types.ObjectId(),
             ...review
         });
         } catch (err) {
@@ -31,9 +32,10 @@ locationSchema.pre('updateOne', async function () {
 
         await newReviewDocument.save();
         const reviewId = newReviewDocument._id;
+        console.log(reviewId);
         try {
         const newDetailsDocument = new detailsModel({
-            // _id: new mongoose.Types.ObjectId(),
+            _id: new mongoose.Types.ObjectId(),
             location: this._conditions._id,
             reviews: [reviewId],
         }); }
