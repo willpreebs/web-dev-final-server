@@ -25,7 +25,8 @@ const detailsSchema = new Schema({
     },
     lastUpdated: Schema.Types.Date,
     bottlesSaved: Number,
-    reviews: [{ type: Schema.Types.ObjectId, ref: 'reviews' }]},
+    // reviews: [{ type: Schema.Types.ObjectId, ref: 'reviews' }]},
+},
     {"collection": "details"});
 
 const detailsModel = mongoose.model("details", detailsSchema);
