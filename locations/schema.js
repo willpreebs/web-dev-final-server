@@ -20,10 +20,14 @@ locationSchema.pre('updateOne', async function () {
 
     if (review && !mongoose.Types.ObjectId.isValid(review)) {
         // console.log("review: " + review);
-
+        
+        try {
         const newReviewDocument = new reviewModel({
             ...review
         });
+        } catch (err) {
+            console.log(err);
+        }
 
         await newReviewDocument.save();
         const reviewId = newReviewDocument._id;

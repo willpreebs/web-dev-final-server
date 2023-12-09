@@ -4,7 +4,6 @@ import * as userDao from "../../users/dao.js";
 import { reviewModel } from "./model.js";
 
 const reviewSchema = new Schema({
-    _id: Schema.Types.ObjectId,
     user: {
         type: Schema.Types.ObjectId,
         ref: 'users',
@@ -20,7 +19,6 @@ const reviewSchema = new Schema({
 {"collection": "reviews"});
 
 const detailsSchema = new Schema({
-    _id: Schema.Types.ObjectId,
     location: {
         type: Schema.Types.ObjectId,
         ref: 'locations',
