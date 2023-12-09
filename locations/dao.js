@@ -17,7 +17,7 @@ export const addNewDetails = (locationId, review) => locationModel.updateOne({_i
 
 export const findDetailsById = (detailsId) => detailsModel.findById(detailsId);
 
-export const addReviewToDetails = (detailsId, review) => detailsModel.updateOne({ _id: detailsId }, { $push: {reviews: review}});
+// export const addReviewToDetails = (detailsId, review) => detailsModel.updateOne({ _id: detailsId }, { $push: {reviews: review}});
 
 export const updateDetails = (detailsId, details) => detailsModel.updateOne({ _id: detailsId }, { $set: details })
 
