@@ -35,7 +35,7 @@ locationSchema.pre('updateOne', async function () {
         console.log(reviewId);
         const newDetailsDocument = await detailsModel.create({
             location: this._conditions._id,
-            // reviews: [reviewId],
+            reviews: [reviewId],
         });
         // try {
         // const newDetailsDocument = new detailsModel({
