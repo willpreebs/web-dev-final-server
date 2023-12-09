@@ -55,7 +55,8 @@ function LocationRoutes(app) {
     const review = req.body;
     if (location.details) {
       // console.log("location details: " + location.details);
-      const details = await dao.addReviewToDetails(location.details, {...review, location: locationId});
+      console.log(location.details._id);
+      const details = await dao.addReviewToDetails(location.details._id, {...review, location: locationId});
       res.send(details);
     }
     else if (location) {
@@ -85,7 +86,7 @@ function LocationRoutes(app) {
   }
 
   const deleteDetails = async (req, res) => {
-    
+
   }
 
   const createLocationDetails = async (req, res) => {

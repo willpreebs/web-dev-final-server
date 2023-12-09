@@ -1,6 +1,6 @@
 
 import mongoose, { Schema } from "mongoose";
-import * as userDao from "../../users/dao.js";
+
 
 const reviewSchema = new Schema({
     user: {
@@ -36,7 +36,10 @@ const detailsSchema = new Schema({
 const detailsModel = mongoose.model("details", detailsSchema);
 const reviewModel = mongoose.model("reviews", reviewSchema);
 
+//  detailsModel.updateOne({ _id: detailsId }, { $push: { reviews: review } });
+
 detailsSchema.pre('updateOne', async function() {
+    console.log('updateOne');
     const update = this.getUpdate();
 
     if (update.$push) {
