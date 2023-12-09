@@ -91,7 +91,14 @@ function LocationRoutes(app) {
 
   const createLocationDetails = async (req, res) => {
     const locationId = req.params.locationId;
-    const details = await dao.createDetails(req.body);
+    const location = await dao.findLocationById(locationId); // .details;
+    if (location.details) {
+      res.status(422).json({
+        message: "Details already exist for this location"
+      })
+      return;
+    }
+    const details = await dao.createDetails({...req.body, location: locationId});
     console.log(details);
     await dao.addDetailsToLocation(locationId, details);
     res.send(details);
@@ -108,6 +115,7 @@ function LocationRoutes(app) {
   app.post("/:locationId/reviews", addReviewToLocation);
   app.get("/:locationId/reviews", getLocationReviews);
 
+  app.post(":/locationId", createLocation)
   app.get("/:locationId", findLocationById);
   app.put("/:locationId", updateLocation);
   app.delete("/:locationId", deleteLocation);
