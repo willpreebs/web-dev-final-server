@@ -25,6 +25,10 @@ const detailsSchema = new Schema({
     },
     lastUpdated: Schema.Types.Date,
     bottlesSaved: Number,
+    filterStatus: {
+        type: String, 
+        enum: ["green", "yellow", "red"],
+    },
     reviews: [{ type: Schema.Types.ObjectId, ref: 'reviews' }]},
     {"collection": "details"});
 
@@ -49,6 +53,6 @@ detailsSchema.pre('updateOne', async function() {
         const newInfo = update.$set;
         console.log(newInfo);
     }
-})
+});
 
 export { reviewSchema, detailsSchema, reviewModel, detailsModel }

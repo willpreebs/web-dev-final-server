@@ -20,6 +20,7 @@ export async function getSearchResults(textQuery) {
     
     const request = { textQuery, locationBias, maxResultCount}
     const GOOGLE_API_KEY = process.env.GOOGLE_MAPS_API;
+    console.log(GOOGLE_API_KEY);
     const URL = "https://places.googleapis.com/v1/places:searchText";
     const headers = {
         'Content-Type': 'application/json',
@@ -31,7 +32,8 @@ export async function getSearchResults(textQuery) {
 
     await axios.post(URL, request, { headers: headers })
       .then(response => {
-        console.log("response: " + response.data);
+        console.log("response: ");
+        console.log(response.data);
         responseData = response.data;
       })
       .catch(error => {

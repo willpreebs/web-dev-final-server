@@ -14,38 +14,39 @@ const locationSchema = new Schema({
     },},
     {'collection': 'locations'});
 
-locationSchema.pre('updateOne', async function () {
-    const update = this.getUpdate();
-    const review = update.$set && update.$set.details;
+// locationSchema.pre('updateOne', async function () {
+//     const update = this.getUpdate();
+//     const review = update.$set && update.$set.review;
 
-    if (review && !mongoose.Types.ObjectId.isValid(review)) {
-        // console.log("review: " + review);
+//     if (review && !mongoose.Types.ObjectId.isValid(review)) {
+//         // console.log("review: " + review);
 
-        try {
-        const newReviewDocument = new reviewModel({
-            _id: new mongoose.Types.ObjectId(),
-            ...review
-        });
-        } catch (err) {
-            console.log(err);
-        }
+//         try {
+//         const newReviewDocument = new reviewModel({
+//             _id: new mongoose.Types.ObjectId(),
+//             ...review
+//         });
+//         } catch (err) {
+//             console.log(err);
+//         }
 
-        await newReviewDocument.save();
-        const reviewId = newReviewDocument._id;
-        console.log(reviewId);
-        const newDetailsDocument = await detailsModel.create({
-            location: this._conditions._id,
-            reviews: [reviewId],
-        });
-        await newDetailsDocument.save();
+//         await newReviewDocument.save();
+//         const reviewId = newReviewDocument._id;
+//         console.log(reviewId);
+//         const newDetailsDocument = await detailsModel.create({
+//             location: this._conditions._id,
+//             reviews: [reviewId],
+//         });
+//         await newDetailsDocument.save();
 
-        update.$set.details = newDetailsDocument._id;
+//         update.$set.review = null;
+//         update.$set.details = newDetailsDocument._id;
 
-        await userDao.addReviewToUser(review.user, newReviewDocument._id); 
-    }
+//         await userDao.addReviewToUser(review.user, newReviewDocument._id); 
+//     }
 
 
-});
+// });
 
 export default locationSchema;
 

@@ -51,28 +51,35 @@ function LocationRoutes(app) {
   const addReviewToLocation = async (req, res) => {
     const locationId = req.params.locationId;
     const location = await dao.findLocationById(locationId);
+    const review = req.body;
     if (location.details) {
       // console.log("location details: " + location.details);
-      const details = await dao.addReviewToDetails(location.details, {...req.body, location: locationId});
+      const details = await dao.addReviewToDetails(location.details, {...review, location: locationId});
       res.send(details);
     }
     else if (location) {
       // console.log(location);
-      const details = await dao.addNewDetails(req.params.locationId, {...req.body, location: locationId});
+      const details = await dao.createDetailsFromFirstReview(review);
+      const location = await dao.updateLocation(locationId, {...location, details: details._id});
       res.send(details);
     }
     else {
-      console.log("Location doesn't exist");
+      // console.log("Location doesn't exist");
+      res.status(404).json({message: "Location does not exist"});
+      return;
     }
   }
 
   const updateLocationDetails = async (req, res) => {
     console.log("updating location details");
+    console.log(req.body);
     const locationId = req.params.locationId;
     const location = await dao.findLocationById(locationId);
     if (location.details) {
-      // console.log("location details: " + location.details);
-      const details = await dao.updateDetails(location.details);
+      console.log("location details: ");
+      console.log(location.details);
+      const details = await dao.updateDetails(location.details._id, req.body);
+      console.log(details);
       res.send(details);
     }
     else {
@@ -80,16 +87,20 @@ function LocationRoutes(app) {
     }
   }
 
-  // const createLocationDetails = async (req, res) => {
-  //   await dao.addNewDetails
-  // }
+  const createLocationDetails = async (req, res) => {
+    const locationId = req.params.locationId;
+    const details = await dao.createDetails(req.body);
+    console.log(details);
+    await dao.addDetailsToLocation(locationId, details);
+    res.send(details);
+  }
 
   app.post("/", createLocation);
   app.get("/", findAllLocations);
 
   app.get("/:locationId/details", getLocationDetails);
   app.put("/:locationId/details", updateLocationDetails);
-  // app.post("/:locationId/details", createLocationDetails);
+  app.post("/:locationId/details", createLocationDetails);
   app.post("/:locationId/reviews", addReviewToLocation);
   app.get("/:locationId/reviews", getLocationReviews);
 
