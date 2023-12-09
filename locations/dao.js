@@ -39,6 +39,12 @@ export const updateDetails = (detailsId, details) => {
 
 // reviews:
 
+export const findAllReviews = () => reviewModel.find();
+
 export const getReviewsByUserId = (userId) => reviewModel.find({ user: userId }).populate('location');
 
 export const getReviewsByLocation = (locationId) => reviewModel.find({ location: locationId });
+
+export const getReviewById = (reviewId) => reviewModel.findById(reviewId);
+
+export const updateReview = (reviewId, review) => reviewModel.updateOne({_id: reviewId}, { $set: review });

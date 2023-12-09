@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 import UserRoutes from "../../users/routes.js";
 import SearchRoutes from "../../Search/routes.js";
 import LocationRoutes from "../../locations/routes.js";
+import ReviewRoutes from "../../locations/details/routes.js";
 import serverless from "serverless-http";
 import session from "express-session";
 
@@ -25,6 +26,7 @@ const app = express();
 const locationRouter = Router();
 const searchRouter = Router();
 const userRouter = Router();
+const reviewRouter = Router();
 
 app.use(express.json());
 app.use(cors({
@@ -49,10 +51,12 @@ app.use(session(sessionOptions));
 LocationRoutes(locationRouter);
 SearchRoutes(searchRouter);
 UserRoutes(userRouter);
+ReviewRoutes(reviewRouter);
 
 app.use("/locations", locationRouter);
 app.use("/search", searchRouter);
 app.use("/users", userRouter);
+app.use("/reviews", reviewRouter)
 
 const PORT = process.env.SERVER_PORT || 4000;
 app.listen(PORT);
