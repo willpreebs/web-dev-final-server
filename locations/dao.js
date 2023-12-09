@@ -1,9 +1,9 @@
 import locationModel from "./model.js";
-import { detailsModel, reviewModel } from "./details/model.js";
+import { detailsModel, reviewModel } from "./details/schema.js";
 
 // locations:
 export const createLocation = (location) => locationModel.create(location);
-export const findAllLocations = () => locationModel.find();
+export const findAllLocations = () => locationModel.find().populate('details');
 export const findLocationById = (locationId) => locationModel.findById(locationId);
 export const findLocationByName = (name) =>
   locationModel.findOne({ name: name });

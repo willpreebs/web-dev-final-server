@@ -1,5 +1,4 @@
 import * as dao from "./dao.js";
-import { reviewModel } from "./details/model.js";
 // let currentLocation = null;
 function LocationRoutes(app) {
   const createLocation = async (req, res) => {
@@ -81,16 +80,16 @@ function LocationRoutes(app) {
     }
   }
 
-  const createLocationDetails = async (req, res) => {
-    await dao.addNewDetails
-  }
+  // const createLocationDetails = async (req, res) => {
+  //   await dao.addNewDetails
+  // }
 
   app.post("/", createLocation);
   app.get("/", findAllLocations);
 
   app.get("/:locationId/details", getLocationDetails);
   app.put("/:locationId/details", updateLocationDetails);
-  app.post("/:locationId/details", createLocationDetails);
+  // app.post("/:locationId/details", createLocationDetails);
   app.post("/:locationId/reviews", addReviewToLocation);
   app.get("/:locationId/reviews", getLocationReviews);
 

@@ -1,7 +1,6 @@
 
 import mongoose, { Schema } from "mongoose";
 import * as userDao from "../../users/dao.js";
-import { reviewModel } from "./model.js";
 
 const reviewSchema = new Schema({
     user: {
@@ -29,19 +28,20 @@ const detailsSchema = new Schema({
     reviews: [{ type: Schema.Types.ObjectId, ref: 'reviews' }]},
     {"collection": "details"});
 
+const detailsModel = mongoose.model("details", detailsSchema);
+const reviewModel = mongoose.model("reviews", reviewSchema);
+
 detailsSchema.pre('updateOne', async function() {
     const update = this.getUpdate();
 
     if (update.$push) {
         const review = update.$push.reviews;
 
-        const newReviewDocument = new reviewModel({
+        const newReviewDocument = reviewModel.create({
             _id: new mongoose.Types.ObjectId(),
             ...review
         });
-
         await newReviewDocument.save();
-
         await userDao.addReviewToUser(review.user, newReviewDocument._id);
 
         update.$push.reviews = newReviewDocument._id;
@@ -51,4 +51,4 @@ detailsSchema.pre('updateOne', async function() {
     }
 })
 
-export { reviewSchema, detailsSchema }
+export { reviewSchema, detailsSchema, reviewModel, detailsModel }

@@ -1,5 +1,5 @@
 import mongoose, {Schema} from "mongoose";
-import { detailsModel, reviewModel } from "./details/model.js";
+import { detailsModel, reviewModel } from "./details/schema.js";
 import * as userDao from "../users/dao.js"
 
 const locationSchema = new Schema({
@@ -33,13 +33,17 @@ locationSchema.pre('updateOne', async function () {
         await newReviewDocument.save();
         const reviewId = newReviewDocument._id;
         console.log(reviewId);
-        try {
-        const newDetailsDocument = new detailsModel({
-            _id: new mongoose.Types.ObjectId(),
+        const newDetailsDocument = await detailsModel.create({
             location: this._conditions._id,
             reviews: [reviewId],
-        }); }
-        catch (err) {};
+        });
+        // try {
+        // const newDetailsDocument = new detailsModel({
+        //     _id: new mongoose.Types.ObjectId(),
+        //     location: this._conditions._id,
+        //     reviews: [reviewId],
+        // }); }
+        // catch (err) {};
         await newDetailsDocument.save();
 
         update.$set.details = newDetailsDocument._id;
