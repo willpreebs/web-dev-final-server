@@ -37,13 +37,6 @@ locationSchema.pre('updateOne', async function () {
             location: this._conditions._id,
             reviews: [reviewId],
         });
-        // try {
-        // const newDetailsDocument = new detailsModel({
-        //     _id: new mongoose.Types.ObjectId(),
-        //     location: this._conditions._id,
-        //     reviews: [reviewId],
-        // }); }
-        // catch (err) {};
         await newDetailsDocument.save();
 
         update.$set.details = newDetailsDocument._id;

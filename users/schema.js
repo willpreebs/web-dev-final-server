@@ -12,7 +12,6 @@ const userSchema = new mongoose.Schema({
         default: "USER" },
     reviews: [{
         type: Schema.Types.ObjectId,
-        // type: Types.ObjectId,
         ref: 'reviews',
     }]
     },
