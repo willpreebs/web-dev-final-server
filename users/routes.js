@@ -19,11 +19,11 @@ function UserRoutes(app) {
   };
 
   const deleteUser = async (req, res) => {
-    await userDao.deleteUser(req.params.userId);
+    res.send(await userDao.deleteUser(req.params.userId));
   };
 
   const findUserById = async (req, res) => {
-    await userDao.findUserById(req.params.userId);
+    res.send(await userDao.findUserById(req.params.userId));
   };
 
 

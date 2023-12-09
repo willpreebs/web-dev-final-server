@@ -38,25 +38,25 @@ const reviewModel = mongoose.model("reviews", reviewSchema);
 
 //  detailsModel.updateOne({ _id: detailsId }, { $push: { reviews: review } });
 
-detailsSchema.pre('updateOne', async function() {
-    console.log('updateOne');
-    const update = this.getUpdate();
+// detailsSchema.pre('updateOne', async function() {
+//     console.log('updateOne');
+//     const update = this.getUpdate();
 
-    if (update.$push) {
-        const review = update.$push.reviews;
+//     if (update.$push) {
+//         const review = update.$push.reviews;
 
-        const newReviewDocument = reviewModel.create({
-            _id: new mongoose.Types.ObjectId(),
-            ...review
-        });
-        await newReviewDocument.save();
-        await userDao.addReviewToUser(review.user, newReviewDocument._id);
+//         const newReviewDocument = reviewModel.create({
+//             _id: new mongoose.Types.ObjectId(),
+//             ...review
+//         });
+//         await newReviewDocument.save();
+//         await userDao.addReviewToUser(review.user, newReviewDocument._id);
 
-        update.$push.reviews = newReviewDocument._id;
-    } else if (update.$set) {
-        const newInfo = update.$set;
-        console.log(newInfo);
-    }
-});
+//         update.$push.reviews = newReviewDocument._id;
+//     } else if (update.$set) {
+//         const newInfo = update.$set;
+//         console.log(newInfo);
+//     }
+// });
 
 export { reviewSchema, detailsSchema, reviewModel, detailsModel }

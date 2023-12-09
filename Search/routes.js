@@ -16,10 +16,8 @@ function SearchRoutes(app) {
         res.send(locations);
     }
 
-    
     app.get("/:term", getSearchResults);
     app.get("/:term/locations", getLocationsBySearchTerm);
-
 }
 export default SearchRoutes;
 
