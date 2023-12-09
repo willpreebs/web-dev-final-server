@@ -10,10 +10,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         enum: ["USER", "ADMIN"],
         default: "USER" },
-    reviews: [{
-        type: Types.ObjectId,
-        ref: 'reviews',
-    }]
+    // reviews: [{
+    //     type: Types.ObjectId,
+    //     ref: 'reviews',
+    // }]
     },
     {collection: "users"});
     
