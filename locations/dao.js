@@ -25,12 +25,8 @@ export const createDetailsFromFirstReview = (locationId, reviewId) => detailsMod
 
 export const findDetailsById = (detailsId) => detailsModel.findById(detailsId);
 
-export const addReviewToDetails = async (detailsId, reviewId) => {
-  // const newReview = await reviewModel.create({...review});
-  // await newReview.save();
-  // await userDao.addReviewToUser(review.user, newReview._id);
-  return detailsModel.updateOne({ _id: detailsId }, { $push: { reviews: reviewId }});
-}
+export const addReviewToDetails = async (detailsId, reviewId) => detailsModel.updateOne({ _id: detailsId }, { $push: { reviews: reviewId }});
+export const removeReviewFromDetails = async (detailsId, reviewId) => detailsModel.updateOne({ _id: detailsId }, { $pull: { reviews: reviewId }});
 
 export const updateDetails = (detailsId, details) => {
   const date = new Date().toJSON();

@@ -62,7 +62,7 @@ function LocationRoutes(app) {
       console.log(newReview);
       const userUpdate = await userDao.addReviewToUser(review.user, newReview._id);
       console.log(userUpdate);
-      const details = await dao.addReviewToDetails(location.details._id, {newReview, location: locationId});
+      const details = await dao.addReviewToDetails(location.details._id, newReview._id);
       res.send(details);
     }
     else if (location) {

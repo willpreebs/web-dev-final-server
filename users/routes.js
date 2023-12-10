@@ -20,7 +20,7 @@ function UserRoutes(app) {
   };
 
   const findAllUsers = async (req, res) => {
-    const users = await userDao.findAllUsers().populate('reviews').populate('favorites');
+    const users = await userDao.findAllUsers().populate('reviews');
     res.json(users);
   };
 
@@ -49,7 +49,6 @@ function UserRoutes(app) {
   const findUserById = async (req, res) => {
     res.send(await userDao.findUserById(req.params.userId));
   };
-
 
   const updateUser = async (req, res) => {
     const userId = req.params.userId;
@@ -167,6 +166,11 @@ function UserRoutes(app) {
     res.send(admin);
   }
 
+  const getUserFavorites = async (req, res) => {
+    const user = await userDao.findUserById(req.params.userId).populate('favorites');
+    res.send(user.favorites);
+  }
+
   app.post("/", createUser);
   app.get("/", findAllUsers);
 
@@ -184,6 +188,8 @@ function UserRoutes(app) {
   app.delete("/admins/:adminId", deleteAdmin);
 
   app.get("/:userId/reviews", getUserReviews);
+
+  app.get("/:userId/favorite", getUserFavorites);
   app.post("/:userId/favorite", addFavoriteLocation);
   app.delete("/:userId/favorite/:locationId", deleteFavoriteLocation)
 

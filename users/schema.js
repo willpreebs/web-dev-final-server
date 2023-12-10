@@ -6,10 +6,6 @@ const userSchema = new mongoose.Schema({
     firstName: String,
     lastName: String,
     email: String,
-    // role: {
-    //     type: String,
-    //     enum: ["USER", "ADMIN"],
-    //     default: "USER" },
     reviews: [{
         type: Schema.Types.ObjectId,
         ref: 'reviews',

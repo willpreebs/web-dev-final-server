@@ -9,8 +9,12 @@ export const findUserByCredentials = (username, password) =>
 export const updateUser = (userId, user) =>
   userModel.updateOne({ _id: userId }, { $set: user });
 export const deleteUser = (userId) => userModel.deleteOne({ _id: userId });
+
 export const addReviewToUser = (userId, reviewId) =>
   userModel.updateOne({_id: userId}, {$push: {reviews: reviewId}});
+export const removeReviewFromUser = (userId, reviewId) =>
+  userModel.updateOne({_id: userId}, {$pull: {reviews: reviewId}});
+
 export const addFavoriteLocation = (userId, locationId) =>
   userModel.updateOne({_id: userId}, {$push: {favorites: locationId}});
 export const removeFavoriteLocation = (userId, locationId) => 
