@@ -1,6 +1,8 @@
 import * as userDao from "./dao.js";
 import * as locationDao from "../locations/dao.js";
 
+import { deleteReviewAndReferences } from "../locations/details/routes.js";
+
 function UserRoutes(app) {
 
   const createUser = async (req, res) => {
@@ -35,8 +37,8 @@ function UserRoutes(app) {
     const reviews = await locationDao.getReviewsByUserId(userId);
 
     for (const review of reviews) {
-      let id = review._id;
-      await locationDao.deleteReview(id);
+      let reviewId = review._id;
+      await deleteReviewAndReferences(reviewId);
     }
   }
 
@@ -86,7 +88,15 @@ function UserRoutes(app) {
       }
     }
     else {
-      response = await userDao.updateUser(userId, req.body);
+      if (user) {
+        response = await userDao.updateUser(userId, req.body);
+      }
+      else if (admin) {
+        response = await userDao.updateAdmin(userId, req.body);
+      }
+      else {
+        res.status(404).json({message: "No user or admin found with that id"});
+      }
     }
     res.json(response);
   };
@@ -111,7 +121,7 @@ function UserRoutes(app) {
     }
     res.json(currentUser);
   };
-  
+
   const signin = async (req, res) => {
     console.log("signin");
     console.log(req.body);

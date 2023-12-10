@@ -1,5 +1,6 @@
 import * as dao from "./dao.js";
 import * as userDao from "../users/dao.js";
+import { deleteReviewAndReferences } from "./details/routes.js";
 // let currentLocation = null;
 function LocationRoutes(app) {
   const createLocation = async (req, res) => {
@@ -98,7 +99,15 @@ function LocationRoutes(app) {
   }
 
   const deleteDetails = async (req, res) => {
+    const locationId = req.params.locationId;
+    const location = await dao.findLocationById(locationId);
+    const details = location.details;
 
+    for (const review of details.reviews) {
+      await deleteReviewAndReferences(review._id);
+    }
+
+    res.send(await dao.deleteDetails(details._id));
   }
 
   const createLocationDetails = async (req, res) => {

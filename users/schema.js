@@ -23,7 +23,7 @@ const adminSchema = new mongoose.Schema({
     firstName: String,
     lastName: String,
     email: String,
-    privileges: String, 
+    privileges: {type: String, required: true}, 
 }, {collection: "admins"});
     
 export { userSchema, adminSchema }

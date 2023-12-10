@@ -33,6 +33,8 @@ export const updateDetails = (detailsId, details) => {
   return detailsModel.updateOne({ _id: detailsId }, { $set: { ...details, lastUpdated: date } });
 }
 
+export const deleteDetails = (detailsId) => detailsModel.deleteOne({ _id: detailsId });
+
 // reviews:
 
 export const findAllReviews = () => reviewModel.find();
