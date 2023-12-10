@@ -57,9 +57,11 @@ function LocationRoutes(app) {
     if (location.details) {
       // console.log("location details: " + location.details);
       console.log(location.details._id);
-      const newReview = await reviewModel.create({...review});
+      const newReview = await dao.createReview(locationId, review);
       await newReview.save();
-      await userDao.addReviewToUser(review.user, newReview._id);
+      console.log(newReview);
+      const userUpdate = await userDao.addReviewToUser(review.user, newReview._id);
+      console.log(userUpdate);
       const details = await dao.addReviewToDetails(location.details._id, {newReview, location: locationId});
       res.send(details);
     }
@@ -67,6 +69,8 @@ function LocationRoutes(app) {
       console.log("hit");
 
       const newReview = await dao.createReview(locationId, review);
+      await newReview.save();
+      const userUpdate = await userDao.addReviewToUser(review.user, newReview._id);
       const details = await dao.createDetailsFromFirstReview(locationId, newReview._id);
       console.log(details);
       console.log("hit");
