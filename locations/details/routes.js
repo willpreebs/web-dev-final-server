@@ -9,7 +9,7 @@ async function deleteReviewAndReferences(reviewId) {
   const detailsId = location.details._id || location.details;
   await userDao.removeReviewFromUser(userId, reviewId);
   await dao.removeReviewFromDetails(detailsId, reviewId);
-  return await dao.deleteReview(req.params.reviewId);
+  return await dao.deleteReview(reviewId);
 }
 
 // let currentLocation = null;
