@@ -116,7 +116,10 @@ function UserRoutes(app) {
     console.log("signin");
     console.log(req.body);
     const {username, password} = req.body;
-    const currentUser = await userDao.findUserByCredentials(username, password);
+    var currentUser = await userDao.findUserByCredentials(username, password);
+    if (!currentUser) {
+      currentUser = await userDao.findAdminByCredentials(username, password);
+    }
     res.json(currentUser);
   };
 
@@ -191,7 +194,6 @@ function UserRoutes(app) {
 
   app.get("/:userId/favorite", getUserFavorites);
   app.post("/:userId/favorite", addFavoriteLocation);
-  app.delete("/:userId/favorite/:locationId", deleteFavoriteLocation)
-
+  app.delete("/:userId/favorite/:locationId", deleteFavoriteLocation);
 }
 export default UserRoutes;
