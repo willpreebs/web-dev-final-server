@@ -4,9 +4,15 @@ import * as locationDao from "../locations/dao.js";
 function UserRoutes(app) {
 
   const createUser = async (req, res) => {
+
+    if (req.body.role && req.body.role === "ADMIN") {
+      const response = await userDao.createAdmin(req.body);
+      res.send(response);
+    }
+
     try {
       const response = await userDao.createUser(req.body);
-      res.json(response);
+      res.send(response);
     } catch (err) {
       console.log("Encountered error with createUser");
       res.status(422).json({message: "createUser failed"});
@@ -14,11 +20,19 @@ function UserRoutes(app) {
   };
 
   const findAllUsers = async (req, res) => {
-    const users = await userDao.findAllUsers();
+    const users = await userDao.findAllUsers().populate('reviews');
     res.json(users);
   };
 
   const deleteUser = async (req, res) => {
+    const userId = req.params.userId;
+    const reviews = await locationDao.getReviewsByUserId(userId);
+
+    for (const review of reviews) {
+      let id = review._id;
+      await locationDao.deleteReview(id);
+    }
+
     res.send(await userDao.deleteUser(req.params.userId));
   };
 
@@ -66,6 +80,14 @@ function UserRoutes(app) {
     res.send(reviews);
   }
 
+  const addFavoriteLocation = async (req, res) => {
+    const userId = req.params.userId;
+    const locationId = req.body.locationId;
+    const result = await userDao.addFavoriteLocation(userId, locationId);
+    await locationDao.addFavoritedUser(locationId, userId);
+    res.send(result);
+  }
+
   app.post("/", createUser);
   app.get("/", findAllUsers);
   app.post("/signin", signin);
@@ -73,6 +95,8 @@ function UserRoutes(app) {
   app.put("/:userId", updateUser);
   app.delete("/:userId", deleteUser);
   app.get("/:userId/reviews", getUserReviews);
+  app.post("/:userId/favorite", addFavoriteLocation);
+  // app.delete("/:userId/favorite/:locationId", deleteFavoriteLocation);
   app.post("/signup", signup);
   // app.post("/account", account);
 }

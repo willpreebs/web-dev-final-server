@@ -10,7 +10,12 @@ const locationSchema = new Schema({
     details: {
         type: Schema.Types.ObjectId,
         ref: 'details',
-    },},
+    },
+    favoritedUsers: [{
+        type: Schema.Types.ObjectId,
+        ref: 'users',
+    }],
+},
     {'collection': 'locations'});
 
 export default locationSchema;

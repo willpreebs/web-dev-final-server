@@ -52,3 +52,7 @@ export const updateReview = (reviewId, review) => reviewModel.updateOne({_id: re
 export const deleteReview = (reviewId) => reviewModel.deleteOne({_id: reviewId});
 
 export const createReview = (locationId, review) => reviewModel.create({...review, location: locationId})
+
+// users:
+
+export const addFavoritedUser = (locationId, userId) => locationModel.updateOne({_id: locationId}, {$push: {favoritedUsers: userId}});

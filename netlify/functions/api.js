@@ -19,6 +19,8 @@ const LOCAL = false;
 const LOCAL_DB = "mongodb://127.0.0.1:27017/Fountains";
 const REMOTE_DB = `mongodb+srv://${MONGO_ATLAS_USERNAME}:${MONGO_ATLAS_PASS}@cluster0.3pkvr30.mongodb.net/${DB_NAME}?retryWrites=true&w=majority`
 
+// console.log(REMOTE_DB);
+
 mongoose.connect(LOCAL ? LOCAL_DB : REMOTE_DB);
 
 const app = express();
@@ -31,7 +33,7 @@ const reviewRouter = Router();
 app.use(express.json());
 app.use(cors({
     credentials: true,
-    origin: "http://localhost:3000",
+    // origin: "http://localhost:3000",
 }));
 
 const sessionOptions = {
