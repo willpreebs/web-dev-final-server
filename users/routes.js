@@ -20,19 +20,29 @@ function UserRoutes(app) {
   };
 
   const findAllUsers = async (req, res) => {
-    const users = await userDao.findAllUsers().populate('reviews');
+    const users = await userDao.findAllUsers().populate('reviews').populate('favorites');
     res.json(users);
   };
 
-  const deleteUser = async (req, res) => {
-    const userId = req.params.userId;
+  const findAllAdmins = async (req, res) => {
+    const admins = await userDao.findAllAdmins();
+    res.json(admins);
+  };
+
+  const deleteAllUserReviews = async (userId) => {
+    console.log("deleting all user reviews of: " + userId);
+
     const reviews = await locationDao.getReviewsByUserId(userId);
 
     for (const review of reviews) {
       let id = review._id;
       await locationDao.deleteReview(id);
     }
+  }
 
+  const deleteUser = async (req, res) => {
+    const userId = req.params.userId;
+    deleteAllUserReviews(userId);
     res.send(await userDao.deleteUser(req.params.userId));
   };
 
@@ -43,24 +53,63 @@ function UserRoutes(app) {
 
   const updateUser = async (req, res) => {
     const userId = req.params.userId;
-    const status = await userDao.updateUser(userId, req.body);
-    const currentUser = await userDao.findUserById(userId);
-    req.session['currentUser'] = currentUser;
-    res.json(status);
+    const user = await userDao.findUserById(userId).lean();
+    const admin = await userDao.findAdminById(userId).lean();
+    console.log(user);
+    console.log(admin);
+    const role = req.body.role;
+    var response;
+    if (role && role === "ADMIN") {
+      if (user) {
+        console.log(user);
+        try {
+          response = await userDao.createAdminFromUser(user);
+          deleteAllUserReviews(userId);
+          const d = await userDao.deleteUser(user._id);
+
+        } catch (err) {
+          res.status(422).json({message: "Cannot convert admin into user"});
+          return;
+        }
+      }
+    }
+    else if (role && role === "USER") {
+      if (admin) {
+        try {
+        response = await userDao.createUserFromAdmin(admin);
+        await userDao.deleteAdmin(admin._id);
+        } 
+        catch (err) {
+          res.status(422).json({message: "Cannot convert user into admin"});
+          return;
+        }
+        // console.log(await userDao.deleteAdmin(admin._id));
+      }
+    }
+    else {
+      response = await userDao.updateUser(userId, req.body);
+    }
+    res.json(response);
   };
 
   const signup = async (req, res) => {
     console.log("signup");
-    const user = await userDao.findUserByUsername(
-      req.body.username);
-    if (user) {
+    const user = await userDao.findUserByUsername(req.body.username);
+    const admin = await userDao.findAdminByUsername(req.body.username);
+    if (user || admin) {
       console.log("user found");
       res.status(400).json(
         { message: "Username already taken"});
       return;
     }
-    const currentUser = await userDao.createUser(req.body);
-    req.session['currentUser'] = currentUser;
+
+    var currentUser;
+    if (req.body.role && req.body.role === "ADMIN") {
+      currentUser = await userDao.createAdmin(req.body);
+    }
+    else {
+      currentUser = await userDao.createUser(req.body);
+    }
     res.json(currentUser);
   };
   
@@ -88,16 +137,55 @@ function UserRoutes(app) {
     res.send(result);
   }
 
+  const deleteFavoriteLocation = async (req, res) => {
+    const userId = req.params.userId;
+    const locationId = req.params.locationId;
+    const result = await userDao.removeFavoriteLocation(userId, locationId);
+    await locationDao.removeFavoritedUser(locationId, userId);
+
+    res.send(result);
+  }
+
+  const updateAdmin = async (req, res) => {
+    const adminId = req.params.adminId;
+    const response = await userDao.updateAdmin(adminId, req.body);
+    res.send(response);
+  }
+
+  const deleteAdmin = async (req, res) => {
+    const response = await userDao.deleteAdmin(req.params.adminId);
+    res.send(response);
+  }
+
+  const createAdmin = async (req, res) => {
+    const admin = await userDao.createAdmin(req.body);
+    res.send(admin);
+  }
+
+  const findAdminById = async (req, res) => {
+    const admin = await userDao.findAdminById(req.params.adminId);
+    res.send(admin);
+  }
+
   app.post("/", createUser);
   app.get("/", findAllUsers);
+
+  app.get("/admins", findAllAdmins);
+  app.post("/admins", createAdmin);
   app.post("/signin", signin);
+  app.post("/signup", signup);
+
   app.get("/:userId", findUserById);
   app.put("/:userId", updateUser);
   app.delete("/:userId", deleteUser);
+
+  app.get("/admins/:adminId", findAdminById);
+  app.put("/admins/:adminId", updateAdmin);
+  app.delete("/admins/:adminId", deleteAdmin);
+
   app.get("/:userId/reviews", getUserReviews);
   app.post("/:userId/favorite", addFavoriteLocation);
-  // app.delete("/:userId/favorite/:locationId", deleteFavoriteLocation);
-  app.post("/signup", signup);
-  // app.post("/account", account);
+  app.delete("/:userId/favorite/:locationId", deleteFavoriteLocation)
+
 }
 export default UserRoutes;

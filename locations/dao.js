@@ -25,11 +25,11 @@ export const createDetailsFromFirstReview = (locationId, reviewId) => detailsMod
 
 export const findDetailsById = (detailsId) => detailsModel.findById(detailsId);
 
-export const addReviewToDetails = async (detailsId, review) => {
-  const newReview = await reviewModel.create({...review});
-  await newReview.save();
-  await userDao.addReviewToUser(review.user, newReview._id);
-  return detailsModel.updateOne({ _id: detailsId }, { $push: { reviews: newReview._id } });
+export const addReviewToDetails = async (detailsId, reviewId) => {
+  // const newReview = await reviewModel.create({...review});
+  // await newReview.save();
+  // await userDao.addReviewToUser(review.user, newReview._id);
+  return detailsModel.updateOne({ _id: detailsId }, { $push: { reviews: reviewId }});
 }
 
 export const updateDetails = (detailsId, details) => {
@@ -56,3 +56,4 @@ export const createReview = (locationId, review) => reviewModel.create({...revie
 // users:
 
 export const addFavoritedUser = (locationId, userId) => locationModel.updateOne({_id: locationId}, {$push: {favoritedUsers: userId}});
+export const removeFavoritedUser = (locationId, userId) => locationModel.updateOne({_id: locationId}, {$pull: {favoritedUsers: userId}});

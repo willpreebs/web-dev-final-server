@@ -13,6 +13,11 @@ export const addReviewToUser = (userId, reviewId) =>
   userModel.updateOne({_id: userId}, {$push: {reviews: reviewId}});
 export const addFavoriteLocation = (userId, locationId) =>
   userModel.updateOne({_id: userId}, {$push: {favorites: locationId}});
+export const removeFavoriteLocation = (userId, locationId) => 
+  userModel.updateOne({_id: userId}, {$pull: {favorites: locationId}});
+
+export const createUserFromAdmin = (admin) => userModel.create({...admin});
+export const createAdminFromUser = (user) => adminModel.create({...user, _id: null, privileges: "*"});
 
 export const createAdmin = (admin) => adminModel.create(admin);
 export const findAllAdmins = () => adminModel.find();

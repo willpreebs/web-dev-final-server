@@ -1,4 +1,5 @@
 import * as dao from "./dao.js";
+import * as userDao from "../users/dao.js";
 // let currentLocation = null;
 function LocationRoutes(app) {
   const createLocation = async (req, res) => {
@@ -56,7 +57,10 @@ function LocationRoutes(app) {
     if (location.details) {
       // console.log("location details: " + location.details);
       console.log(location.details._id);
-      const details = await dao.addReviewToDetails(location.details._id, {...review, location: locationId});
+      const newReview = await reviewModel.create({...review});
+      await newReview.save();
+      await userDao.addReviewToUser(review.user, newReview._id);
+      const details = await dao.addReviewToDetails(location.details._id, {newReview, location: locationId});
       res.send(details);
     }
     else if (location) {
