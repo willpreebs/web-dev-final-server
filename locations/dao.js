@@ -11,7 +11,7 @@ export const findLocationByName = (name) =>
 export const updateLocation = (locationId, location) =>
   locationModel.updateOne({ _id: locationId }, { $set: location });
 export const deleteLocation = (locationId) => locationModel.deleteOne({ _id: locationId });
-export const findLocationsByPlaceId = (placeId) => locationModel.find({ place_id: placeId });
+export const findLocationsByPlaceId = (placeId) => locationModel.find({ place_id: placeId }).populate({ path: 'details', populate: { path: 'reviews', populate: { path: 'user', select: { 'username': 1 } } } });
 
 // details:
 export const addDetailsToLocation = (locationId, detailsId) => locationModel.updateOne({ _id: locationId }, { $set: { details: detailsId } });
